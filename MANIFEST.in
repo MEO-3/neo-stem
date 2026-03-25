@@ -2,4 +2,5 @@ include CMakeLists.txt
 include install-armbian.sh
 include ARCHITECTURE.md
 recursive-include src *.qml *.cpp *.h
+recursive-include neo_stem *.py
 recursive-include translations *.ts
