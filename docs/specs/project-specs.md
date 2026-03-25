@@ -29,32 +29,31 @@ Maximum score is 300 stars (20 activities x 15 stars).
 - Multi-language support (Vietnamese default, English available)
 
 ## Technology Stack
-- UI: Qt Quick / QML (Qt 6.5+)
-- Backend: C++17
-- Build system: CMake 3.16+
-- Database: SQLite (Qt Sql + QML LocalStorage)
-- Packaging: Python CLI (`neostem`)
+- UI: PyQt5 Widgets (Qt 5.15+)
+- Backend: Python 3.8+
+- Database: SQLite (sqlite3 + QStandardPaths)
+- Packaging: `pyproject.toml` with console entry point `neostem`
 
-Qt modules in use:
-- Qt6::Quick
-- Qt6::QuickControls2
-- Qt6::Multimedia
-- Qt6::Sql
+Legacy stack (still present in repo):
+- Qt 6.5+ / QML UI
+- C++17 backend
+- CMake build system
 
 ## Architecture Summary
-Entry point is `src/main.cpp` which initializes Qt, sets fonts, and creates SQLite tables. QML is loaded into `MainMenu.qml` which hosts a StackView for navigation.
+Entry point is `neo_stem/app.py`, which initializes the PyQt5 app, applies theme, and launches `MainWindow` with a `ViewStack`-based navigation flow.
 
-Global singletons in QML:
-- `NeoConstants.qml`: colors, activity metadata, step names, badge data
-- `ProgressTracker.qml`: progress CRUD, stars, reset
-- `BadgeSystem.qml`: badge unlock logic
+Core UI building blocks:
+- `neo_stem/ui/main_window.py`: main navigation shell
+- `neo_stem/ui/view_stack.py`: push/pop navigation stack
+- `neo_stem/ui/widgets/`: reusable widgets (NeoBar, TouchButton, NeoScore, NeoBonus)
 
 Activity flow:
-- Each activity (Q1-Q20) extends `ActivityBase.qml`
-- `ActivityBase.qml` loads step QML files dynamically and triggers progress/badge updates
+- Each activity (Q1-Q20) is a PyQt5 widget extending `ActivityBaseWidget`
+- Steps are PyQt5 widgets emitting `step_completed(stars)` signals
+- Progress is persisted via `neo_stem/db/progress.py`
 
 ## Data Model (SQLite)
-The app stores progress and badge state locally.
+The app stores progress locally via `neo_stem/db/progress.py`.
 
 Tables:
 - `progress`: per-question step completion, stars, and optional JSON data
@@ -64,7 +63,6 @@ Tables:
 DB locations:
 - macOS: `~/Library/Application Support/BinhDanHocSTEM/NEO_STEM/neostem.db`
 - Linux: `~/.local/share/BinhDanHocSTEM/NEO_STEM/neostem.db`
-- QML LocalStorage: `~/.local/share/BinhDanHocSTEM/NEO_STEM/QML/OfflineStorage/`
 
 ## Python Entry Point
 The PyQt5 app entry point is exposed as `neostem = "neo_stem.app:main"` in `pyproject.toml`.
@@ -88,13 +86,18 @@ Minimum hardware:
 Displays: HDMI, LCD touchscreen, X11, Wayland, or framebuffer.
 
 ## Project Layout (High Level)
-- `src/`: C++ entry + QML UI
-  - `core/`: shared QML components and singletons
-  - `menu/`: navigation screens
-  - `activities/`: 20 activity modules (Q1-Q20)
-- `translations/`: TS translation files
 - `neo_stem/`: PyQt5 application package
-- `CMakeLists.txt`: CMake build config
+  - `ui/`: views, widgets, activities
+  - `db/`: SQLite persistence
+  - `data/`: activity metadata
+- `src/`: legacy C++/QML implementation (reference)
+  - `core/`, `menu/`, `activities/`
+- `translations/`: TS translation files (legacy)
+- `CMakeLists.txt`: legacy CMake build config
+
+## Migration Status
+- PyQt5 UI implemented for Q1–Q6 with step parity to QML content.
+- Q7–Q20 pending.
 
 ## Performance Targets (from ARCHITECTURE.md)
 - Startup time: ~1s (macOS M1), ~3-5s (ARM 2GB)
@@ -102,8 +105,7 @@ Displays: HDMI, LCD touchscreen, X11, Wayland, or framebuffer.
 - Binary size: ~3-5MB
 - UI FPS: 30-60
 
-## Device specs
-- End users machine:
-    - Linux Armbian ARM64 
-    - 2GB RAM
-    - 16GB storage
+## Device Specs
+- End-user device: Linux Armbian ARM64
+- RAM: 2GB
+- Storage: 16GB
