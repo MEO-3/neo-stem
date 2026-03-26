@@ -6,7 +6,7 @@
 #
 # Usage:
 #   Local:  bash scripts/install_on_neo.sh
-#   Remote: curl -sSL https://raw.githubusercontent.com/tuanln/NEO_STEM/main/scripts/install_on_neo.sh | bash
+#   Remote: curl -sSL https://raw.githubusercontent.com/MEO-3/neo-stem/master/scripts/install_on_neo.sh | bash
 #
 # Options:
 #   --no-desktop   Skip .desktop file and icon installation
@@ -16,20 +16,20 @@
 set -euo pipefail
 
 # -- Configuration ------------------------------------------------------------
-APP_NAME="neostem"
+APP_NAME="neo-stem"
 DISPLAY_NAME="NEO STEM"
-INSTALL_DIR="$HOME/.local/share/neostem"
+INSTALL_DIR="$HOME/.local/share/neo-stem"
 VENV_DIR="$INSTALL_DIR/venv"
-BIN_LINK="$HOME/.local/bin/neostem"
-DESKTOP_FILE="$HOME/.local/share/applications/neostem.desktop"
+BIN_LINK="$HOME/.local/bin/neo-stem"
+DESKTOP_FILE="$HOME/.local/share/applications/neo-stem.desktop"
 ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
-ICON_FILE="$ICON_DIR/neostem.png"
-PYPI_PACKAGE="neostem"
-GITHUB_REPO="https://github.com/tuanln/NEO_STEM.git"
+ICON_FILE="$ICON_DIR/neo-stem.png"
+PYPI_PACKAGE="neo-stem"
+GITHUB_REPO="https://github.com/MEO-3/neo-stem.git"
 
 # -- Parse arguments -----------------------------------------------------------
 SKIP_DESKTOP=false
-USE_VENV=true
+USE_VENV=false
 UNINSTALL=false
 
 for arg in "$@"; do
