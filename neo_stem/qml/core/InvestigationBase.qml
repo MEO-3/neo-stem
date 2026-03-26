@@ -66,7 +66,7 @@ Item {
             id: experimentContent
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredHeight: parent.height * 0.45
+            Layout.minimumHeight: 120
         }
 
         // Controls
@@ -74,12 +74,14 @@ Item {
             id: controlsContent
             Layout.fillWidth: true
             Layout.preferredHeight: 80
+            Layout.minimumHeight: 60
         }
 
         // Data table
         Rectangle {
             Layout.fillWidth: true
-            Layout.preferredHeight: 140
+            Layout.preferredHeight: 120
+            Layout.minimumHeight: 80
             radius: 8
             color: NeoConstants.cardBg
             border.width: 1

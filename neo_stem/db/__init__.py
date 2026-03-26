@@ -1,5 +1,1 @@
-"""Database layer for NEO STEM."""
-
-from .progress import progress_tracker
-
-__all__ = ["progress_tracker"]
+"""Database layer for NEO STEM (legacy — progress tracking now handled by backend/progress_backend.py)."""

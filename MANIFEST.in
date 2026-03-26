@@ -1,6 +1,3 @@
-include CMakeLists.txt
-include install-armbian.sh
-include ARCHITECTURE.md
-recursive-include src *.qml *.cpp *.h
 recursive-include neo_stem *.py
+recursive-include neo_stem/qml *.qml qmldir
 recursive-include translations *.ts

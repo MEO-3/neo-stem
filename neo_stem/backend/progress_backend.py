@@ -5,13 +5,28 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from PyQt6.QtCore import QObject, QStandardPaths, pyqtSlot, QVariant
+from PyQt6.QtCore import QObject, QStandardPaths, pyqtProperty, pyqtSignal, pyqtSlot, QVariant
 
 
 class ProgressTracker(QObject):
+    # Emitted after any write operation so QML bindings can re-evaluate.
+    # QML bindings that read progress data should include `revision` to
+    # create a dependency, e.g.: ProgressTracker.getStepProgress(qid, sid, ProgressTracker.revision)
+    # or reference it in a ternary: (ProgressTracker.revision, ProgressTracker.getTotalStars())
+    progressChanged = pyqtSignal()
+
     def __init__(self, parent: Optional[QObject] = None) -> None:
         super().__init__(parent)
         self._conn: Optional[sqlite3.Connection] = None
+        self._revision: int = 0
+
+    @pyqtProperty(int, notify=progressChanged)
+    def revision(self) -> int:
+        return self._revision
+
+    def _notify(self) -> None:
+        self._revision += 1
+        self.progressChanged.emit()
 
     def _ensure_db(self) -> None:
         if self._conn is not None:
@@ -66,6 +81,7 @@ class ProgressTracker(QObject):
             (questionId, stepId, stars, data),
         )
         self._conn.commit()
+        self._notify()
 
     @pyqtSlot(int, int, result=QVariant)
     def getStepProgress(self, questionId: int, stepId: int) -> Optional[dict]:
@@ -134,6 +150,7 @@ class ProgressTracker(QObject):
             (questionId, noteId, text, 1 if answered else 0),
         )
         self._conn.commit()
+        self._notify()
 
     @pyqtSlot(int, result=QVariant)
     def getDQBNotes(self, questionId: int) -> list:
@@ -159,6 +176,7 @@ class ProgressTracker(QObject):
             (badgeId, datetime.now(timezone.utc).isoformat()),
         )
         self._conn.commit()
+        self._notify()
 
     @pyqtSlot(str, result=bool)
     def isBadgeUnlocked(self, badgeId: str) -> bool:
@@ -200,3 +218,4 @@ class ProgressTracker(QObject):
         self._conn.execute("DELETE FROM badges")
         self._conn.execute("DELETE FROM dqb_state")
         self._conn.commit()
+        self._notify()

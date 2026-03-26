@@ -1,7 +1,11 @@
 """NEO STEM application entry point — PyQt6 + QML with Python backend."""
 
+import os
 import sys
 from pathlib import Path
+
+# Use Basic style to allow full QML control customization (handle, background, etc.)
+os.environ.setdefault("QT_QUICK_CONTROLS_STYLE", "Basic")
 
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtQml import QQmlApplicationEngine

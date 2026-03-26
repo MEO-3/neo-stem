@@ -59,7 +59,7 @@ Item {
                 color: NeoConstants.sunshine
             }
             Text {
-                text: ProgressTracker.getTotalStars() + "/" + NeoConstants.maxStarsTotal
+                text: { void(ProgressTracker.revision); return ProgressTracker.getTotalStars() + "/" + NeoConstants.maxStarsTotal }
                 font.pixelSize: NeoConstants.fontCaption
                 font.bold: true
                 color: "white"
@@ -102,6 +102,7 @@ Item {
                     property color groupColor: modelData.color
                     property var qIds: modelData.questionIds
                     property int completedCount: {
+                        void(ProgressTracker.revision)
                         var count = 0
                         for (var i = 0; i < qIds.length; i++) {
                             if (ProgressTracker.isQuestionComplete(qIds[i]))
@@ -257,8 +258,8 @@ Item {
                                     required property int index
 
                                     property var questionData: NeoConstants.getQuestionById(card.modelData)
-                                    property bool isComplete: ProgressTracker.isQuestionComplete(card.modelData)
-                                    property int questionStars: ProgressTracker.getQuestionStars(card.modelData)
+                                    property bool isComplete: { void(ProgressTracker.revision); return ProgressTracker.isQuestionComplete(card.modelData) }
+                                    property int questionStars: { void(ProgressTracker.revision); return ProgressTracker.getQuestionStars(card.modelData) }
 
                                     // Icon circle
                                     Rectangle {

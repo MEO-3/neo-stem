@@ -114,10 +114,12 @@ Item {
                 width: 120
                 height: 140
 
-                property var stepProgress: ProgressTracker.getStepProgress(root.questionId, index)
+                // Reference revision to re-evaluate when progress changes
+                property int _rev: ProgressTracker.revision
+                property var stepProgress: { void(_rev); return ProgressTracker.getStepProgress(root.questionId, index) }
                 property int stepStars: stepProgress ? stepProgress.stars : 0
                 property bool stepCompleted: stepProgress ? stepProgress.completed : false
-                property bool unlocked: index === 0 || (ProgressTracker.getStepProgress(root.questionId, index - 1) !== null)
+                property bool unlocked: { void(_rev); return index === 0 || (ProgressTracker.getStepProgress(root.questionId, index - 1) !== null) }
 
                 Column {
                     anchors.centerIn: parent

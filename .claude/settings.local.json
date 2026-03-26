@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"progress_tracker\\\\|from neo_stem\" E:dev_thingaineo-stemneo_stem --include=*.py)",
+      "Bash(find E:/dev_thingai/neo-stem -type f -name *.py -o -type f -name *.md)"
+    ]
+  }
+}

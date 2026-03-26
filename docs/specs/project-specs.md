@@ -3,8 +3,6 @@
 ## Overview
 NEO STEM is an interactive STEM education application for Vietnamese students (grades 3-9, ages ~8-15). It delivers 20 everyday science phenomena as learning activities using a 5-step learning flow (phenomenon, questions, investigation, model, challenge). The app is touch-friendly, offline-first, and gamified with stars and badges.
 
-Primary sources: `README.md`, `ARCHITECTURE.md`, `pyproject.toml`.
-
 ## Goals and Target Users
 - Audience: Vietnamese students, grades 3-9 (8-15 years old)
 - Goals: hands-on STEM discovery, step-by-step inquiry learning, offline progress tracking
@@ -29,43 +27,46 @@ Maximum score is 300 stars (20 activities x 15 stars).
 - Multi-language support (Vietnamese default, English available)
 
 ## Technology Stack
-- UI: PyQt5 Widgets (Qt 5.15+)
-- Backend: Python 3.8+
+- UI: QML (Qt Quick) running on PyQt6 6.5+
+- Backend: Python 3.8+ QObject bridge classes
 - Database: SQLite (sqlite3 + QStandardPaths)
 - Packaging: `pyproject.toml` with console entry point `neostem`
 
-Legacy stack (still present in repo):
-- Qt 6.5+ / QML UI
-- C++17 backend
+Legacy reference (still in repo under `src/`):
+- Qt 6.5+ / QML UI with C++17 backend
 - CMake build system
 
 ## Architecture Summary
-Entry point is `neo_stem/app.py`, which initializes the PyQt5 app, applies theme, and launches `MainWindow` with a `ViewStack`-based navigation flow.
+Entry point is `neo_stem/app.py`, which initializes a `QGuiApplication` + `QQmlApplicationEngine`, registers Python QObject backends as QML context properties, and loads `MainMenu.qml`.
 
-Core UI building blocks:
-- `neo_stem/ui/main_window.py`: main navigation shell
-- `neo_stem/ui/view_stack.py`: push/pop navigation stack
-- `neo_stem/ui/widgets/`: reusable widgets (NeoBar, TouchButton, NeoScore, NeoBonus)
+QML UI layer (`neo_stem/qml/`):
+- `core/`: Shared components (ActivityBase, NeoBar, NeoBonus, NeoScore, TouchButton, DragItem, DropZone, ParticleEffects, PhenomenonViewer, InvestigationBase, ModelBuilder, ProblematizeChallenge, DrivingQuestionBoard, SliderControl, ThermometerWidget, NeoAudio)
+- `core/NeoConstants.qml`: Singleton with colors, typography, question data, badge definitions
+- `menu/`: Navigation screens (MainMenu, QuestionSelector, StepSelector, ProfileScreen, SettingsScreen)
+- `activities/`: 20 activity directories (q1_rice_cooker through q20_water_xylophone), each with main QML + 5 step files
 
-Activity flow:
-- Each activity (Q1-Q20) is a PyQt5 widget extending `ActivityBaseWidget`
-- Steps are PyQt5 widgets emitting `step_completed(stars)` signals
-- Progress is persisted via `neo_stem/db/progress.py`
+Python backend (`neo_stem/backend/`):
+- `progress_backend.py`: `ProgressTracker(QObject)` — SQLite persistence for progress, badges, DQB notes. Exposes `@pyqtSlot` methods matching the QML API. Emits `progressChanged` signal with a `revision` property so QML bindings auto-update.
+- `badge_backend.py`: `BadgeSystem(QObject)` — evaluates badge criteria, delegates to ProgressTracker.
+
+Data (`neo_stem/data/`):
+- `constants.py`: 20 question definitions and 5 step names (pure Python data, also mirrored in NeoConstants.qml)
 
 ## Data Model (SQLite)
-The app stores progress locally via `neo_stem/db/progress.py`.
+Progress is stored locally via `neo_stem/backend/progress_backend.py`.
 
 Tables:
-- `progress`: per-question step completion, stars, and optional JSON data
+- `progress`: per-question step completion, stars, and optional data
 - `badges`: unlocked badges with timestamps
 - `dqb_state`: sticky note text/answers for driving questions
 
 DB locations:
+- Windows: `%LOCALAPPDATA%/BinhDanHocSTEM/NEO_STEM/neostem.db`
 - macOS: `~/Library/Application Support/BinhDanHocSTEM/NEO_STEM/neostem.db`
 - Linux: `~/.local/share/BinhDanHocSTEM/NEO_STEM/neostem.db`
 
 ## Python Entry Point
-The PyQt5 app entry point is exposed as `neostem = "neo_stem.app:main"` in `pyproject.toml`.
+Exposed as `neostem = "neo_stem.app:main"` in `pyproject.toml`.
 
 Run locally:
 ```
@@ -77,6 +78,7 @@ Supported platforms:
 - Linux x86_64 (Ubuntu 22.04+ / Debian 12+)
 - Linux ARM64 (Armbian Bookworm / Ubuntu 22.04+)
 - macOS 13+
+- Windows 10+
 
 Minimum hardware:
 - Linux x86_64: 2GB RAM
@@ -85,27 +87,20 @@ Minimum hardware:
 
 Displays: HDMI, LCD touchscreen, X11, Wayland, or framebuffer.
 
-## Project Layout (High Level)
-- `neo_stem/`: PyQt5 application package
-  - `ui/`: views, widgets, activities
-  - `db/`: SQLite persistence
-  - `data/`: activity metadata
-- `src/`: legacy C++/QML implementation (reference)
-  - `core/`, `menu/`, `activities/`
-- `translations/`: TS translation files (legacy)
-- `CMakeLists.txt`: legacy CMake build config
+## Project Layout
+- `neo_stem/`: Application package
+  - `app.py`: Entry point (QGuiApplication + QQmlApplicationEngine)
+  - `backend/`: Python QObject bridge classes (progress, badges)
+  - `db/`: Legacy SQLite module (unused, kept for reference)
+  - `data/`: Activity metadata (constants.py)
+  - `qml/`: QML UI files
+    - `core/`: Shared components + NeoConstants singleton
+    - `menu/`: Navigation screens
+    - `activities/`: 20 activity directories with step QML files
+- `src/`: Legacy C++/QML implementation (reference only)
+- `translations/`: TS translation files
 
-## Migration Status
-- PyQt5 UI implemented for Q1–Q6 with step parity to QML content.
-- Q7–Q20 pending.
-
-## Performance Targets (from ARCHITECTURE.md)
+## Performance Targets
 - Startup time: ~1s (macOS M1), ~3-5s (ARM 2GB)
 - RAM usage: ~80-120MB (macOS), ~60-100MB (ARM)
-- Binary size: ~3-5MB
 - UI FPS: 30-60
-
-## Device Specs
-- End-user device: Linux Armbian ARM64
-- RAM: 2GB
-- Storage: 16GB
