@@ -9,7 +9,7 @@
 ### Cài tự động (Linux / macOS)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/tuanln/NEO_STEM/main/scripts/install_on_neo.sh | bash
+curl -sSL https://raw.githubusercontent.com/MEO-3/NEO_STEM/main/scripts/install_on_neo.sh | bash
 ```
 
 Tùy chọn:
