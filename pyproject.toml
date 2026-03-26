@@ -25,7 +25,6 @@ classifiers = [
 
 [project.scripts]
 neo-stem = "neo_stem.app:main"
-neostem = "neo_stem.app:main"
 
 [project.urls]
 Homepage = "https://github.com/tuanln/NEO_STEM"
