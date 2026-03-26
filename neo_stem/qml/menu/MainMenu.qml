@@ -21,6 +21,13 @@ ApplicationWindow {
         initialItem: splashComponent
     }
 
+    // Auto-wire backToMenu signal on any pushed activity
+    Connections {
+        target: stackView.currentItem
+        ignoreUnknownSignals: true
+        function onBackToMenu() { stackView.pop() }
+    }
+
     // Splash Screen
     Component {
         id: splashComponent
@@ -187,25 +194,10 @@ ApplicationWindow {
         20: "q20_water_xylophone/Q20WaterXylophone.qml"
     })
 
-    // Wrapper component that loads an activity QML file and wires backToMenu
-    Component {
-        id: activityLoaderComponent
-        Loader {
-            property string activitySource: ""
-            anchors.fill: parent
-            source: activitySource
-            onLoaded: {
-                if (item && item.backToMenu)
-                    item.backToMenu.connect(function() { stackView.pop() })
-            }
-        }
-    }
-
     function loadActivity(questionId, startStep) {
         var file = activityFiles[questionId]
         if (file) {
-            var url = Qt.resolvedUrl("../activities/" + file)
-            stackView.push(activityLoaderComponent, { activitySource: url })
+            stackView.push(Qt.resolvedUrl("../activities/" + file))
         }
     }
 }

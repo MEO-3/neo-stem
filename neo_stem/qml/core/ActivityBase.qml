@@ -12,7 +12,8 @@ Item {
     // 5-step state machine
     property int currentStep: 0  // 0-4
     property int totalSteps: 5
-    property var stepComponents: []  // URLs of step QML files
+    property var stepComponents: []  // Bare filenames of step QML files
+    property url baseUrl: ""         // Set by subclass: Qt.resolvedUrl(".")
     property var stepStars: [0, 0, 0, 0, 0]
 
     // Navigation signals
@@ -22,8 +23,6 @@ Item {
     // State
     property bool isActive: true
     property Loader _stepLoader: stepLoader
-
-    anchors.fill: parent
 
     Rectangle {
         anchors.fill: parent
@@ -77,7 +76,8 @@ Item {
     function goToStep(step) {
         if (step >= 0 && step < totalSteps && step < stepComponents.length) {
             currentStep = step
-            stepLoader.source = stepComponents[step]
+            // Resolve step filename relative to the activity's own directory
+            stepLoader.source = baseUrl + "/" + stepComponents[step]
         }
     }
 

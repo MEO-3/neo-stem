@@ -3,6 +3,7 @@ import "../../core"
 
 ActivityBase {
     questionId: 8
+    baseUrl: Qt.resolvedUrl(".")
     questionTitle: qsTr("Q8: Tiếng trống")
     drivingQuestion: qsTr("Tại sao đập trống phát ra tiếng vang?")
 

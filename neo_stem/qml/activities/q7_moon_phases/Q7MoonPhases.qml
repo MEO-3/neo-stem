@@ -3,6 +3,7 @@ import "../../core"
 
 ActivityBase {
     questionId: 7
+    baseUrl: Qt.resolvedUrl(".")
     questionTitle: qsTr("Q7: Pha mặt trăng")
     drivingQuestion: qsTr("Tại sao mặt trăng thay đổi hình dạng mỗi đêm?")
 

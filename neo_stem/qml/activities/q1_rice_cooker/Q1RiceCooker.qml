@@ -3,6 +3,7 @@ import "../../core"
 
 ActivityBase {
     questionId: 1
+    baseUrl: Qt.resolvedUrl(".")
     questionTitle: qsTr("Q1: Nồi cơm điện")
     drivingQuestion: qsTr("Tại sao nắp nồi cơm điện rung và có hơi nước?")
 
