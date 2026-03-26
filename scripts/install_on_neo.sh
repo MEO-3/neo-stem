@@ -127,6 +127,7 @@ install_system_deps() {
         # Try Qt6 packages (optional — PyQt6 via pip is the fallback)
         sudo apt-get install -y -qq \
             python3-pyqt6 \
+            python3-pyqt6.qt \
             qml6-module-qtquick \
             qml6-module-qtquick-controls \
             qml6-module-qtquick-layouts \
