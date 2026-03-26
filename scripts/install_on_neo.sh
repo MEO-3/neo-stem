@@ -17,8 +17,6 @@ set -euo pipefail
 # -- Configuration ------------------------------------------------------------
 APP_NAME="neo-stem"
 DISPLAY_NAME="NEO STEM"
-INSTALL_DIR="$HOME/.local/share/neo-stem"
-VENV_DIR="$INSTALL_DIR/venv"
 BIN_LINK="$HOME/.local/bin/neo-stem"
 DESKTOP_FILE="$HOME/.local/share/applications/neo-stem.desktop"
 ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
@@ -60,19 +58,25 @@ detect_arch() {
     esac
 }
 
+# pip install wrapper that adds --break-system-packages when needed
+pip_install() {
+    local bsp=""
+    if python3 -m pip install --help 2>&1 | grep -q "break-system-packages"; then
+        bsp="--break-system-packages"
+    fi
+    python3 -m pip install $bsp "$@"
+}
+
 # -- Uninstall -----------------------------------------------------------------
 do_uninstall() {
     info "Uninstalling $DISPLAY_NAME..."
 
-    if [ -d "$VENV_DIR" ]; then
-        rm -rf "$VENV_DIR"
-        info "Removed virtualenv: $VENV_DIR"
+    # Remove pip-installed package
+    local bsp=""
+    if python3 -m pip install --help 2>&1 | grep -q "break-system-packages"; then
+        bsp="--break-system-packages"
     fi
-
-    if [ -d "$INSTALL_DIR" ]; then
-        rm -rf "$INSTALL_DIR"
-        info "Removed install dir: $INSTALL_DIR"
-    fi
+    python3 -m pip uninstall -y $bsp "$PYPI_PACKAGE" 2>/dev/null || true
 
     if [ -L "$BIN_LINK" ]; then
         rm -f "$BIN_LINK"
@@ -119,8 +123,7 @@ install_system_deps() {
     if [ "$ARCH" = "arm" ]; then
         info "ARM detected — installing system dependencies..."
         sudo apt-get update -qq
-        # Install what's available; not all distros have all Qt6 packages
-        sudo apt-get install -y -qq python3-venv python3-pip git 2>/dev/null || true
+        sudo apt-get install -y -qq python3-pip git 2>/dev/null || true
         # Try Qt6 packages (optional — PyQt6 via pip is the fallback)
         sudo apt-get install -y -qq \
             python3-pyqt6 \
@@ -129,15 +132,10 @@ install_system_deps() {
             qml6-module-qtquick-layouts \
             qml6-module-qtquick-window \
             2>/dev/null || {
-                warn "Qt6 apt packages not available. PyQt6 will be installed via pip in venv."
+                warn "Qt6 apt packages not available. PyQt6 will be installed via pip."
             }
     elif [ "$ARCH" = "x86" ]; then
         info "x86 detected — PyQt6 will be installed via pip."
-        if ! python3 -m venv --help &>/dev/null; then
-            info "Installing python3-venv..."
-            sudo apt-get update -qq
-            sudo apt-get install -y -qq python3-venv
-        fi
     else
         warn "Unknown architecture '$(uname -m)'. Proceeding with pip-based install."
     fi
@@ -145,52 +143,51 @@ install_system_deps() {
 
 install_system_deps
 
-# -- Step 2: Create virtualenv and install -------------------------------------
-mkdir -p "$INSTALL_DIR"
-
-if [ "$ARCH" = "arm" ]; then
-    info "Creating virtualenv with system-site-packages (for apt PyQt6)..."
-    python3 -m venv --system-site-packages "$VENV_DIR"
-else
-    info "Creating isolated virtualenv..."
-    python3 -m venv "$VENV_DIR"
-fi
-
-PIP="$VENV_DIR/bin/pip"
-"$PIP" install --upgrade pip --quiet
-
-# Try PyPI first, fall back to GitHub source
+# -- Step 2: Install package --------------------------------------------------
 info "Installing $DISPLAY_NAME..."
-if "$PIP" install --quiet "$PYPI_PACKAGE" 2>/dev/null; then
+if pip_install --quiet "$PYPI_PACKAGE" 2>/dev/null; then
     info "Installed from PyPI."
 else
     info "PyPI package not found. Installing from GitHub source..."
     require_cmd git
     if [ "$ARCH" = "arm" ]; then
         # On ARM, skip PyQt6 dep to avoid slow build from source
-        "$PIP" install --no-deps "git+${GITHUB_REPO}"
+        pip_install --no-deps "git+${GITHUB_REPO}"
         # Install PyQt6 only if not already available via system packages
-        if ! "$VENV_DIR/bin/python" -c "import PyQt6" 2>/dev/null; then
+        if ! python3 -c "import PyQt6" 2>/dev/null; then
             info "Installing PyQt6 via pip (this may take a while on ARM)..."
-            "$PIP" install "PyQt6>=6.5"
+            pip_install "PyQt6>=6.5"
         fi
     else
-        "$PIP" install "git+${GITHUB_REPO}"
+        pip_install "git+${GITHUB_REPO}"
     fi
 fi
 
-# Create bin symlink
-mkdir -p "$(dirname "$BIN_LINK")"
-ln -sf "$VENV_DIR/bin/neo-stem" "$BIN_LINK"
-info "Linked $BIN_LINK -> $VENV_DIR/bin/neo-stem"
-
 # -- Step 3: Verify installation -----------------------------------------------
-if [ ! -x "$VENV_DIR/bin/neo-stem" ]; then
-    error "Installation failed — '$VENV_DIR/bin/neo-stem' not found."
+# pip installs scripts to ~/.local/bin on Linux
+NEO_BIN="$(python3 -c "
+import sysconfig, os
+scripts = sysconfig.get_path('scripts', 'posix_user')
+print(os.path.join(scripts, 'neo-stem'))
+" 2>/dev/null || echo "$HOME/.local/bin/neo-stem")"
+
+if [ ! -f "$NEO_BIN" ]; then
+    # Also check if it ended up on the system path
+    NEO_BIN="$(command -v neo-stem 2>/dev/null || true)"
+fi
+
+if [ -z "$NEO_BIN" ] || [ ! -f "$NEO_BIN" ]; then
+    error "Installation failed — 'neo-stem' binary not found."
     error "Check the output above for errors."
     exit 1
 fi
-info "Verified: $VENV_DIR/bin/neo-stem"
+
+# Ensure symlink in ~/.local/bin
+mkdir -p "$(dirname "$BIN_LINK")"
+if [ "$NEO_BIN" != "$BIN_LINK" ]; then
+    ln -sf "$NEO_BIN" "$BIN_LINK"
+fi
+info "Verified: $NEO_BIN"
 
 # -- Step 4: Desktop integration -----------------------------------------------
 install_desktop_entry() {
@@ -204,7 +201,7 @@ install_desktop_entry() {
 
     # Try to find icon from installed package
     local pkg_icon
-    pkg_icon="$("$VENV_DIR/bin/python" -c "
+    pkg_icon="$(python3 -c "
 import importlib.resources, sys
 try:
     ref = importlib.resources.files('neo_stem') / 'assets' / 'neo-stem.png'
@@ -274,6 +271,5 @@ info "=========================================="
 echo ""
 echo "  Run:  neo-stem"
 echo ""
-echo "  Installed in: $VENV_DIR"
-echo "  Uninstall:    curl -sSL https://raw.githubusercontent.com/MEO-3/neo-stem/master/scripts/install_on_neo.sh | bash -s -- --uninstall"
+echo "  Uninstall:  curl -sSL https://raw.githubusercontent.com/MEO-3/neo-stem/master/scripts/install_on_neo.sh | bash -s -- --uninstall"
 echo ""
