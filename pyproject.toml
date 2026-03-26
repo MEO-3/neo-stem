@@ -3,7 +3,7 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "neostem"
+name = "neo-stem"
 version = "1.0.0"
 description = "NEO STEM - Ung dung giao duc STEM tuong tac cho hoc sinh Viet Nam (Lop 3-9)"
 readme = "README.md"
