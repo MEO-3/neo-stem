@@ -8,6 +8,7 @@
 
 ### Cài tự động (Linux / macOS)
 
+Cài trên NEO One
 ```bash
 curl -sSL https://raw.githubusercontent.com/MEO-3/neo-stem/master/scripts/install_on_neo.sh | bash
 ```
