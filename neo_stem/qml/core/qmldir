@@ -1,0 +1,19 @@
+module core
+singleton NeoConstants 1.0 NeoConstants.qml
+ActivityBase 1.0 ActivityBase.qml
+NeoBar 1.0 NeoBar.qml
+NeoBonus 1.0 NeoBonus.qml
+NeoScore 1.0 NeoScore.qml
+NeoAudio 1.0 NeoAudio.qml
+DrivingQuestionBoard 1.0 DrivingQuestionBoard.qml
+DQBItem 1.0 DQBItem.qml
+PhenomenonViewer 1.0 PhenomenonViewer.qml
+InvestigationBase 1.0 InvestigationBase.qml
+ModelBuilder 1.0 ModelBuilder.qml
+ProblematizeChallenge 1.0 ProblematizeChallenge.qml
+TouchButton 1.0 TouchButton.qml
+DragItem 1.0 DragItem.qml
+DropZone 1.0 DropZone.qml
+ParticleEffects 1.0 ParticleEffects.qml
+ThermometerWidget 1.0 ThermometerWidget.qml
+SliderControl 1.0 SliderControl.qml

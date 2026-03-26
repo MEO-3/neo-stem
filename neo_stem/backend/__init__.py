@@ -1,1 +1,1 @@
-"""Backend services for the PyQt5 migration."""
+"""Backend QObject bridge classes for PyQt6 + QML integration."""

@@ -1,1 +1,1 @@
-"""PyQt5 application package for NEO STEM."""
+"""NEO STEM — PyQt6 + QML STEM education application."""

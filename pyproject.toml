@@ -9,7 +9,7 @@ description = "NEO STEM - Ung dung giao duc STEM tuong tac cho hoc sinh Viet Nam
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.8"
-dependencies = ["PyQt5>=5.15"]
+dependencies = ["PyQt6>=6.5"]
 authors = [
     {name = "Binh Dan Hoc STEM & Robot"},
 ]
@@ -32,20 +32,10 @@ Homepage = "https://github.com/tuanln/NEO_STEM"
 [tool.setuptools]
 packages = [
     "neo_stem",
-    "neo_stem.ui",
-    "neo_stem.ui.views",
-    "neo_stem.ui.widgets",
-    "neo_stem.ui.activities",
-    "neo_stem.ui.activities.q1_rice_cooker",
-    "neo_stem.ui.activities.q2_dalat_fog",
-    "neo_stem.ui.activities.q3_mangrove",
-    "neo_stem.ui.activities.q4_ice_glass",
-    "neo_stem.ui.activities.q5_sea_salt",
-    "neo_stem.ui.activities.q6_rainbow",
     "neo_stem.data",
     "neo_stem.backend",
     "neo_stem.db",
 ]
 
 [tool.setuptools.package-data]
-neo_stem = ["assets/**/*", "translations/**/*"]
+neo_stem = ["assets/**/*", "translations/**/*", "qml/**/*.qml", "qml/**/qmldir"]

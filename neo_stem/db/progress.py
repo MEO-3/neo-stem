@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 from typing import Optional
 
-from PyQt5 import QtCore
+from PyQt6 import QtCore
 
 
 class ProgressTracker:
@@ -14,7 +14,7 @@ class ProgressTracker:
         if self._conn is not None:
             return
 
-        data_path = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.AppDataLocation)
+        data_path = QtCore.QStandardPaths.writableLocation(QtCore.QStandardPaths.StandardLocation.AppDataLocation)
         Path(data_path).mkdir(parents=True, exist_ok=True)
         self._db_path = Path(data_path) / "neostem.db"
         self._conn = sqlite3.connect(self._db_path)

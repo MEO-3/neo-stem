@@ -1,0 +1,8 @@
+module activities.q13_light_bulb
+Q13LightBulb 1.0 Q13LightBulb.qml
+Step1Phenomenon 1.0 Step1Phenomenon.qml
+Step2DQB 1.0 Step2DQB.qml
+Step3Investigation 1.0 Step3Investigation.qml
+Step4Model 1.0 Step4Model.qml
+Step5Problematize 1.0 Step5Problematize.qml
+

@@ -1,4 +1,4 @@
-"""Database layer for the PyQt5 migration."""
+"""Database layer for NEO STEM."""
 
 from .progress import progress_tracker
 

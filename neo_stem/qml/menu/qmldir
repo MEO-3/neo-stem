@@ -1,0 +1,6 @@
+module menu
+MainMenu 1.0 MainMenu.qml
+QuestionSelector 1.0 QuestionSelector.qml
+StepSelector 1.0 StepSelector.qml
+ProfileScreen 1.0 ProfileScreen.qml
+SettingsScreen 1.0 SettingsScreen.qml
