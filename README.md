@@ -31,7 +31,7 @@ Hoặc dùng entry point:
 
 ```bash
 pip install -e .
-neostem
+neo-stem
 ```
 
 ## Kiến trúc
