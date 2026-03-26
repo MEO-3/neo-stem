@@ -4,7 +4,23 @@
 
 20 hiện tượng khoa học từ đời sống thường ngày, học qua 5 bước: Hiện tượng - Câu hỏi - Thí nghiệm - Mô hình - Thách thức.
 
-## Chạy nhanh
+## Cài đặt
+
+### Cài tự động (Linux / macOS)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/tuanln/NEO_STEM/main/scripts/install_on_neo.sh | bash
+```
+
+Tùy chọn:
+
+```bash
+bash scripts/install_on_neo.sh --no-desktop   # Bỏ qua tạo shortcut desktop
+bash scripts/install_on_neo.sh --no-venv       # Cài vào system Python
+bash scripts/install_on_neo.sh --uninstall     # Gỡ cài đặt
+```
+
+### Cài thủ công
 
 ```bash
 pip install PyQt6
