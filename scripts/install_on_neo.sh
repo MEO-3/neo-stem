@@ -178,8 +178,8 @@ install_in_venv() {
 
     # Create bin symlink
     mkdir -p "$(dirname "$BIN_LINK")"
-    ln -sf "$VENV_DIR/bin/neostem" "$BIN_LINK"
-    info "Linked $BIN_LINK -> $VENV_DIR/bin/neostem"
+    ln -sf "$VENV_DIR/bin/neo-stem" "$BIN_LINK"
+    info "Linked $BIN_LINK -> $VENV_DIR/bin/neo-stem"
 }
 
 install_without_venv() {
@@ -211,13 +211,13 @@ fi
 
 # -- Step 3: Verify installation -----------------------------------------------
 if [ "$USE_VENV" = true ]; then
-    NEO_BIN="$VENV_DIR/bin/neostem"
+    NEO_BIN="$VENV_DIR/bin/neo-stem"
 else
-    NEO_BIN="$(command -v neostem 2>/dev/null || true)"
+    NEO_BIN="$(command -v neo-stem 2>/dev/null || true)"
 fi
 
 if [ -z "$NEO_BIN" ] || [ ! -x "$NEO_BIN" ]; then
-    error "Installation verification failed — 'neostem' binary not found."
+    error "Installation verification failed — 'neo-stem' binary not found."
     exit 1
 fi
 info "Verified: $NEO_BIN"
@@ -230,14 +230,14 @@ install_desktop_entry() {
     fi
 
     local exec_path="$NEO_BIN"
-    local icon_name="neostem"
+    local icon_name="neo-stem"
 
     # Try to find icon from installed package
     local pkg_icon
     pkg_icon="$(python3 -c "
 import importlib.resources, pathlib, sys
 try:
-    ref = importlib.resources.files('neo_stem') / 'assets' / 'neostem.png'
+    ref = importlib.resources.files('neo_stem') / 'assets' / 'neo-stem.png'
     with importlib.resources.as_file(ref) as p:
         print(p)
 except Exception:
@@ -289,7 +289,7 @@ ensure_path() {
         if [ -f "$shell_rc" ] && ! grep -q 'local/bin' "$shell_rc"; then
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$shell_rc"
             info "Added $bin_dir to PATH in $shell_rc"
-            info "Run 'source $shell_rc' or open a new terminal to use 'neostem'."
+            info "Run 'source $shell_rc' or open a new terminal to use 'neo-stem'."
         fi
     fi
 }
@@ -302,7 +302,7 @@ info "=========================================="
 info "  $DISPLAY_NAME installed successfully!"
 info "=========================================="
 echo ""
-echo "  Run:  neostem"
+echo "  Run:  neo-stem"
 echo ""
 if [ "$USE_VENV" = true ]; then
     echo "  Installed in: $VENV_DIR"
