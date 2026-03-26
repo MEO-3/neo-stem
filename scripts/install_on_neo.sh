@@ -132,6 +132,8 @@ install_system_deps() {
             qml6-module-qtquick-controls \
             qml6-module-qtquick-layouts \
             qml6-module-qtquick-window \
+            qml6-module-qtquick-templates \
+            qml6-module-qtqml-workerscript \
             2>/dev/null || {
                 warn "Qt6 apt packages not available. PyQt6 will be installed via pip."
             }
