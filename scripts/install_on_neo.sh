@@ -127,10 +127,13 @@ install_system_deps() {
         # Try Qt6 packages (optional — PyQt6 via pip is the fallback)
         sudo apt-get install -y -qq \
             python3-pyqt6 \
+            python3-pyqt6.qt \
             qml6-module-qtquick \
             qml6-module-qtquick-controls \
             qml6-module-qtquick-layouts \
             qml6-module-qtquick-window \
+            qml6-module-qtquick-templates \
+            qml6-module-qtqml-workerscript \
             2>/dev/null || {
                 warn "Qt6 apt packages not available. PyQt6 will be installed via pip."
             }
@@ -145,20 +148,27 @@ install_system_deps
 
 # -- Step 2: Install package --------------------------------------------------
 info "Installing $DISPLAY_NAME..."
-if pip_install --quiet "$PYPI_PACKAGE" 2>/dev/null; then
-    info "Installed from PyPI."
-else
-    info "PyPI package not found. Installing from GitHub source..."
-    require_cmd git
-    if [ "$ARCH" = "arm" ]; then
-        # On ARM, skip PyQt6 dep to avoid slow build from source
+
+if [ "$ARCH" = "arm" ]; then
+    # ARM: no PyQt6 wheels on PyPI → install without deps, use system Qt6
+    info "ARM detected — installing without PyQt6 dependency (using system Qt6)..."
+    if ! pip_install --no-deps --quiet "$PYPI_PACKAGE" 2>&1; then
+        info "PyPI install failed. Installing from GitHub source..."
+        require_cmd git
         pip_install --no-deps "git+${GITHUB_REPO}"
-        # Install PyQt6 only if not already available via system packages
-        if ! python3 -c "import PyQt6" 2>/dev/null; then
-            info "Installing PyQt6 via pip (this may take a while on ARM)..."
-            pip_install "PyQt6>=6.5"
-        fi
+    fi
+    # Ensure PyQt6 is available (system packages or pip fallback)
+    if ! python3 -c "import PyQt6" 2>/dev/null; then
+        info "Installing PyQt6 via pip (this may take a while on ARM)..."
+        pip_install "PyQt6>=6.5"
+    fi
+else
+    # x86: PyQt6 wheels available, normal install
+    if pip_install --quiet "$PYPI_PACKAGE" 2>&1; then
+        info "Installed from PyPI."
     else
+        info "PyPI install failed. Installing from GitHub source..."
+        require_cmd git
         pip_install "git+${GITHUB_REPO}"
     fi
 fi
