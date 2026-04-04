@@ -239,16 +239,17 @@ QtObject {
         }
     ]
 
-    // Typography
-    readonly property int fontTitle: 28
-    readonly property int fontBody: 18
-    readonly property int fontButton: 20
-    readonly property int fontCaption: 14
+    // Typography — tối ưu cho trẻ em 8-11 tuổi
+    readonly property int fontTitle: 32       // was 28 — tiêu đề trang
+    readonly property int fontBody: 20        // was 18 — nội dung chính
+    readonly property int fontButton: 22      // was 20 — văn bản nút bấm
+    readonly property int fontCaption: 16     // was 14 — chú thích, nhãn phụ
+    readonly property int fontSmall: 13       // mới — không dùng nhỏ hơn 13px
 
-    // Touch targets
-    readonly property int touchMin: 48
-    readonly property int dragItemSize: 64
-    readonly property int buttonHeight: 56
+    // Touch targets — tăng cho ngón tay nhỏ
+    readonly property int touchMin: 52        // was 48
+    readonly property int dragItemSize: 72    // was 64
+    readonly property int buttonHeight: 60    // was 56
 
     // Animation durations
     readonly property int animFast: 200
