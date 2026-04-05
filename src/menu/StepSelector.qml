@@ -32,7 +32,7 @@ Item {
 
             TouchButton {
                 width: 48; height: 48
-                text: "◄"
+                text: "⬅"
                 fontSize: 20
                 buttonColor: "transparent"
                 textColor: "white"
@@ -159,7 +159,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: NeoConstants.stepNames[index]
-                        font.pixelSize: 12
+                        font.pixelSize: NeoConstants.fontSmall
                         font.bold: true
                         color: stepNode.unlocked ? "#333333" : "#999999"
                         width: 120
@@ -171,7 +171,7 @@ Item {
                     NeoScore {
                         anchors.horizontalCenter: parent.horizontalCenter
                         stars: stepNode.stepStars
-                        starSize: 16
+                        starSize: 20
                         visible: stepNode.stepCompleted
                     }
                 }

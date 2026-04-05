@@ -28,7 +28,7 @@ Item {
 
             TouchButton {
                 width: 48; height: 48
-                text: "◄"
+                text: "⬅"
                 fontSize: 20
                 buttonColor: "transparent"
                 textColor: "white"
@@ -71,6 +71,52 @@ Item {
             from: 0.0
             to: 1.0
             accentColor: NeoConstants.forestGreen
+        }
+
+        // Separator
+        Rectangle { width: parent.width; height: 1; color: "#E0E0E0" }
+
+        // Large text mode
+        Column {
+            width: parent.width
+            spacing: 8
+
+            Text {
+                text: qsTr("🔤 Cỡ chữ")
+                font.pixelSize: NeoConstants.fontCaption
+                font.bold: true
+                color: "#555555"
+            }
+
+            Row {
+                spacing: 12
+
+                TouchButton {
+                    text: qsTr("Bình thường")
+                    buttonColor: !NeoConstants.largeTextMode ? NeoConstants.forestGreen : "#E0E0E0"
+                    textColor: !NeoConstants.largeTextMode ? "white" : "#666666"
+                    fontSize: NeoConstants.fontCaption
+                    onClicked: NeoConstants.largeTextMode = false
+                }
+
+                TouchButton {
+                    text: qsTr("Chữ lớn")
+                    buttonColor: NeoConstants.largeTextMode ? NeoConstants.warmOrange : "#E0E0E0"
+                    textColor: NeoConstants.largeTextMode ? "white" : "#666666"
+                    fontSize: NeoConstants.fontCaption
+                    onClicked: NeoConstants.largeTextMode = true
+                }
+            }
+
+            Text {
+                width: parent.width
+                text: NeoConstants.largeTextMode
+                      ? qsTr("Chữ to hơn 25%, phù hợp trẻ nhỏ và màn hình lớn")
+                      : qsTr("Cỡ chữ mặc định, phù hợp hầu hết màn hình")
+                font.pixelSize: NeoConstants.fontSmall
+                color: "#888888"
+                wrapMode: Text.WordWrap
+            }
         }
 
         // Separator
@@ -149,7 +195,7 @@ Item {
             Text {
                 width: parent.width
                 text: qsTr("NEO STEM v1.0\nPhần mềm giáo dục STEM cho trẻ em Việt Nam\nDựa trên phương pháp OpenSciEd\n\nCộng đồng Bình Dân Học STEM & Robot")
-                font.pixelSize: 12
+                font.pixelSize: NeoConstants.fontSmall
                 color: "#888888"
                 wrapMode: Text.WordWrap
             }
