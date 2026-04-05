@@ -125,7 +125,7 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottomMargin: 12
-                text: "NEO STEM v1.0 — Bình Dân Học STEM & Robot — Lớp 3-9"
+                text: "NEO STEM v1.0.3 — Bình Dân Học STEM & Robot — Lớp 3-9"
                 font.pixelSize: 11
                 color: "#80FFFFFF"
             }

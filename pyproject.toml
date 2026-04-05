@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "neo-stem"
-version = "1.0.1"
+version = "1.0.3"
 description = "NEO STEM - Ung dung giao duc STEM tuong tac cho hoc sinh Viet Nam (Lop 3-9)"
 readme = "README.md"
 license = {text = "MIT"}

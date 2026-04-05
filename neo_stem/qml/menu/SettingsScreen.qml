@@ -148,7 +148,7 @@ Item {
 
             Text {
                 width: parent.width
-                text: qsTr("NEO STEM v1.0\nPhần mềm giáo dục STEM cho trẻ em Việt Nam\nDựa trên phương pháp OpenSciEd\n\nCộng đồng Bình Dân Học STEM & Robot")
+                text: qsTr("NEO STEM v1.0.3\nPhần mềm giáo dục STEM cho trẻ em Việt Nam\nDựa trên phương pháp OpenSciEd\n\nCộng đồng Bình Dân Học STEM & Robot")
                 font.pixelSize: 12
                 color: "#888888"
                 wrapMode: Text.WordWrap
