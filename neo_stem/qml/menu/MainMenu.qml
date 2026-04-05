@@ -67,15 +67,17 @@ ApplicationWindow {
                 // NEO mascot
                 Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    width: 100
-                    height: 100
-                    radius: 50
+                    width: 120
+                    height: 120
+                    radius: 60
                     color: NeoConstants.oceanBlue
+                    border.width: 4
+                    border.color: NeoConstants.sunshine
 
                     Text {
                         anchors.centerIn: parent
                         text: "🤖"
-                        font.pixelSize: 56
+                        font.pixelSize: 64
                     }
 
                     SequentialAnimation on scale {
@@ -103,7 +105,7 @@ ApplicationWindow {
                     spacing: 16
 
                     TouchButton {
-                        text: qsTr("Hồ sơ")
+                        text: qsTr("📊 Hồ sơ")
                         buttonColor: "transparent"
                         textColor: "white"
                         fontSize: NeoConstants.fontCaption
@@ -111,7 +113,7 @@ ApplicationWindow {
                     }
 
                     TouchButton {
-                        text: qsTr("Cài đặt")
+                        text: qsTr("⚙️ Cài đặt")
                         buttonColor: "transparent"
                         textColor: "white"
                         fontSize: NeoConstants.fontCaption
@@ -125,8 +127,8 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottomMargin: 12
-                text: "NEO STEM v1.0.3 — Bình Dân Học STEM & Robot — Lớp 3-9"
-                font.pixelSize: 11
+                text: "NEO STEM v1.0 — Bình Dân Học STEM & Robot — Lớp 3-9"
+                font.pixelSize: NeoConstants.fontSmall
                 color: "#80FFFFFF"
             }
         }

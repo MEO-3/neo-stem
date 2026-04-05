@@ -19,7 +19,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 56
+        height: 64
         color: NeoConstants.forestGreen
 
         Row {
@@ -29,7 +29,7 @@ Item {
 
             TouchButton {
                 width: 48; height: 48
-                text: "◄"
+                text: "⬅"
                 fontSize: 20
                 buttonColor: "transparent"
                 textColor: "white"
@@ -157,14 +157,14 @@ Item {
                                 radius: 12
                                 color: Qt.rgba(1, 1, 1, 0.3)
 
-                                Text {
-                                    id: ageText
-                                    anchors.centerIn: parent
-                                    text: groupSection.modelData.age + " " + qsTr("tuổi")
-                                    font.pixelSize: 12
-                                    font.bold: true
-                                    color: "white"
-                                }
+                            Text {
+                                id: ageText
+                                anchors.centerIn: parent
+                                text: groupSection.modelData.age + " " + qsTr("tuổi")
+                                font.pixelSize: NeoConstants.fontSmall
+                                font.bold: true
+                                color: "white"
+                            }
                             }
 
 
@@ -176,7 +176,7 @@ Item {
                             anchors.rightMargin: 16
                             anchors.verticalCenter: parent.verticalCenter
                             text: groupSection.completedCount + "/" + groupSection.qIds.length + " " + qsTr("hoàn thành")
-                            font.pixelSize: 13
+                            font.pixelSize: NeoConstants.fontSmall
                             color: Qt.rgba(1, 1, 1, 0.9)
                         }
                     }
@@ -251,8 +251,8 @@ Item {
                                 // Question card
                                 Column {
                                     id: card
-                                    spacing: 4
-                                    width: 90
+                                    spacing: 8
+                                    width: NeoConstants.largeTextMode ? 180 : 150
 
                                     required property var modelData
                                     required property int index
@@ -265,9 +265,9 @@ Item {
                                     Rectangle {
                                         id: iconCircle
                                         anchors.horizontalCenter: parent.horizontalCenter
-                                        width: 56
-                                        height: 56
-                                        radius: 28
+                                        width: NeoConstants.largeTextMode ? 88 : 76
+                                        height: width
+                                        radius: width / 2
                                         color: card.isComplete
                                                ? groupSection.groupColor
                                                : Qt.rgba(groupSection.groupColor.r, groupSection.groupColor.g, groupSection.groupColor.b, 0.15)
@@ -277,7 +277,7 @@ Item {
                                         Text {
                                             anchors.centerIn: parent
                                             text: card.questionData ? card.questionData.icon : ""
-                                            font.pixelSize: 26
+                                            font.pixelSize: NeoConstants.largeTextMode ? 42 : 36
                                         }
 
                                         // Completed badge
@@ -286,15 +286,15 @@ Item {
                                             anchors.top: parent.top
                                             anchors.right: parent.right
                                             anchors.margins: -4
-                                            width: 20
-                                            height: 20
-                                            radius: 10
+                                            width: 26
+                                            height: 26
+                                            radius: 13
                                             color: NeoConstants.sunshine
 
                                             Text {
                                                 anchors.centerIn: parent
                                                 text: "✓"
-                                                font.pixelSize: 12
+                                                font.pixelSize: NeoConstants.fontSmall
                                                 font.bold: true
                                                 color: "white"
                                             }
@@ -326,8 +326,8 @@ Item {
                                     Text {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         width: parent.width
-                                        text: "Q" + card.modelData + ": " + (card.questionData ? card.questionData.title : "")
-                                        font.pixelSize: 11
+                                        text: card.questionData ? card.questionData.title : ""
+                                        font.pixelSize: NeoConstants.fontCaption
                                         font.bold: true
                                         color: "#333333"
                                         horizontalAlignment: Text.AlignHCenter
@@ -339,9 +339,9 @@ Item {
                                     // Difficulty level badge
                                     Rectangle {
                                         anchors.horizontalCenter: parent.horizontalCenter
-                                        width: levelText.implicitWidth + 10
-                                        height: 16
-                                        radius: 8
+                                        width: levelText.implicitWidth + 16
+                                        height: 26
+                                        radius: 13
                                         color: card.questionData ? (NeoConstants.levelColors[card.questionData.level] || "#999") : "#999"
 
                                         Text {
@@ -352,7 +352,7 @@ Item {
                                                 var label = NeoConstants.levelLabels[card.questionData.level] || ""
                                                 return label + " " + qsTr("L") + card.questionData.gradeRange
                                             }
-                                            font.pixelSize: 9
+                                            font.pixelSize: NeoConstants.fontSmall
                                             font.bold: true
                                             color: "white"
                                         }
@@ -362,7 +362,7 @@ Item {
                                     NeoScore {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         stars: Math.min(3, Math.floor(card.questionStars / 5))
-                                        starSize: 14
+                                        starSize: NeoConstants.largeTextMode ? 24 : 20
                                     }
                                 }
                             }

@@ -239,16 +239,21 @@ QtObject {
         }
     ]
 
-    // Typography
-    readonly property int fontTitle: 28
-    readonly property int fontBody: 18
-    readonly property int fontButton: 20
-    readonly property int fontCaption: 14
+    // Chế độ chữ lớn — bật trong Cài đặt, lưu qua Settings
+    property bool largeTextMode: false
+    readonly property real textScale: largeTextMode ? 1.25 : 1.0
 
-    // Touch targets
-    readonly property int touchMin: 48
-    readonly property int dragItemSize: 64
-    readonly property int buttonHeight: 56
+    // Typography — tối ưu cho trẻ em 8-11 tuổi (đã tăng baseline)
+    readonly property int fontTitle: Math.round(36 * textScale)   // was 32 → 36, large: 45
+    readonly property int fontBody: Math.round(24 * textScale)    // was 20 → 24, large: 30
+    readonly property int fontButton: Math.round(24 * textScale)  // was 22 → 24, large: 30
+    readonly property int fontCaption: Math.round(18 * textScale) // was 16 → 18, large: 23
+    readonly property int fontSmall: Math.round(16 * textScale)   // was 13 → 16, large: 20
+
+    // Touch targets — tăng cho ngón tay nhỏ
+    readonly property int touchMin: largeTextMode ? 60 : 52
+    readonly property int dragItemSize: largeTextMode ? 84 : 72
+    readonly property int buttonHeight: largeTextMode ? 68 : 60
 
     // Animation durations
     readonly property int animFast: 200

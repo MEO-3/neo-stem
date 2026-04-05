@@ -24,6 +24,8 @@ Item {
     property bool isActive: true
     property Loader _stepLoader: stepLoader
 
+    anchors.fill: parent
+
     Rectangle {
         anchors.fill: parent
         color: NeoConstants.ricePaper
