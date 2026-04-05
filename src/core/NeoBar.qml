@@ -24,10 +24,10 @@ Rectangle {
 
         // Home button
         TouchButton {
-            Layout.preferredWidth: 48
+            Layout.preferredWidth: 56
             Layout.preferredHeight: 48
-            text: "⌂"
-            fontSize: 24
+            text: "🏠"
+            fontSize: 26
             buttonColor: "transparent"
             textColor: "white"
             onClicked: root.homeClicked()
@@ -35,10 +35,10 @@ Rectangle {
 
         // Back button
         TouchButton {
-            Layout.preferredWidth: 48
+            Layout.preferredWidth: 56
             Layout.preferredHeight: 48
-            text: "◄"
-            fontSize: 20
+            text: "⬅"
+            fontSize: 24
             buttonColor: "transparent"
             textColor: "white"
             onClicked: root.backClicked()
@@ -74,7 +74,7 @@ Rectangle {
                         anchors.centerIn: parent
                         text: root.stepStars[index] > 0 ? "★" : (index + 1)
                         color: index === root.currentStep ? "white" : "#333333"
-                        font.pixelSize: 14
+                        font.pixelSize: NeoConstants.fontSmall
                         font.bold: true
                     }
 
@@ -86,10 +86,10 @@ Rectangle {
 
         // Help button
         TouchButton {
-            Layout.preferredWidth: 48
+            Layout.preferredWidth: 56
             Layout.preferredHeight: 48
-            text: "?"
-            fontSize: 22
+            text: "💡"
+            fontSize: 26
             buttonColor: NeoConstants.warmOrange
             textColor: "white"
             onClicked: root.helpClicked()
